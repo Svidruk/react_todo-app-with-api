@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { Todo } from '../../types/Todo';
 import { TodoItem } from '../TodoItem';
 import { FilterOptions } from '../../types/FilterOptions';
