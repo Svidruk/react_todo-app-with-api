@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { addTodo, deleteTodo, getTodos, updateTodo } from '../api/todos';
 import { Todo } from '../types/Todo';
 import { ErrorMessages } from '../types/ErrorMessages';
@@ -14,9 +14,9 @@ export const useTodos = () => {
   const [editedTodoId, setEditedTodoId] = useState<number | null>(null);
   const [newTitle, setNewTitle] = useState('');
 
-  const handleErrorReset = () => {
+  const handleErrorReset = useCallback(() => {
     setErrorMessage(ErrorMessages.NO_ERROR);
-  };
+  }, [setErrorMessage]);
 
   const handleErrorMessage = (error: ErrorMessages) => {
     setErrorMessage(error);
@@ -67,8 +67,8 @@ export const useTodos = () => {
     updateTodo(id, updatedTodo)
       .then(todo => {
         setTodos(currentTodos =>
-          currentTodos.map(updatedTodo =>
-            updatedTodo.id === id ? { ...updatedTodo, ...todo } : updatedTodo,
+          currentTodos.map(todoToUpdate =>
+            todoToUpdate.id === id ? { ...todoToUpdate, ...todo } : todoToUpdate,
           ),
         );
         setEditedTodoId(null);
