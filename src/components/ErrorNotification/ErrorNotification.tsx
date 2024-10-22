@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { ErrorMessages } from '../../types/ErrorMessages';
 import cn from 'classnames';
 
@@ -11,6 +11,14 @@ export const ErrorNotification: FC<Props> = ({
   errorMessage,
   onResetError,
 }) => {
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      onResetError();
+    }, 3000);
+
+    return () => clearTimeout(timerId);
+  }, [errorMessage]);
+
   return (
     <div
       data-cy="ErrorNotification"

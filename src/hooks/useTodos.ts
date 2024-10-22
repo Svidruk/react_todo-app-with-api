@@ -20,7 +20,6 @@ export const useTodos = () => {
 
   const handleErrorMessage = (error: ErrorMessages) => {
     setErrorMessage(error);
-    setTimeout(handleErrorReset, 3000);
   };
 
   useEffect(() => {
@@ -36,7 +35,7 @@ export const useTodos = () => {
     addTodo(newTodo)
       .then(todo => {
         setTodos(currentTodos => [...currentTodos, todo]);
-        setNewTitle('')
+        setNewTitle('');
       })
       .catch(() => handleErrorMessage(ErrorMessages.UNABLE_TO_ADD_TODO))
       .finally(() => {
@@ -68,7 +67,9 @@ export const useTodos = () => {
     updateTodo(id, updatedTodo)
       .then(todo => {
         setTodos(currentTodos =>
-          currentTodos.map(t => (t.id === id ? { ...t, ...todo } : t)),
+          currentTodos.map(updatedTodo =>
+            updatedTodo.id === id ? { ...updatedTodo, ...todo } : updatedTodo,
+          ),
         );
         setEditedTodoId(null);
       })
@@ -84,10 +85,6 @@ export const useTodos = () => {
   const handleCompletedDelete = () => {
     const completedTodos = todos.filter(todo => todo.completed);
     setIsReceivingAnswer(true);
-    setLoadingTodoIds(currentIds => [
-      ...currentIds,
-      ...completedTodos.map(todo => todo.id),
-    ]);
 
     Promise.all(
       completedTodos.map(completedTodo => handleTodoDelete(completedTodo.id)),
@@ -102,11 +99,6 @@ export const useTodos = () => {
       : todos.filter(todo => !todo.completed);
 
     setIsReceivingAnswer(true);
-    setLoadingTodoIds(currentIds => [
-      ...currentIds,
-      ...todosToUpdate.map(todo => todo.id),
-    ]);
-
     Promise.all(
       todosToUpdate.map(todo =>
         handleTodoUpdate(todo.id, { completed: newStatus }),
