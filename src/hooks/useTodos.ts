@@ -22,11 +22,11 @@ export const useTodos = () => {
     setErrorMessage(error);
   };
 
-  useEffect(() => {
+  const getTodosOnLoad = () => {
     getTodos()
       .then(setTodos)
       .catch(() => handleErrorMessage(ErrorMessages.UNABLE_TO_LOAD_TODO));
-  }, []);
+  };
 
   const handleAddTodo = (newTodo: Todo) => {
     setTempTodo(newTodo);
@@ -68,7 +68,9 @@ export const useTodos = () => {
       .then(todo => {
         setTodos(currentTodos =>
           currentTodos.map(todoToUpdate =>
-            todoToUpdate.id === id ? { ...todoToUpdate, ...todo } : todoToUpdate,
+            todoToUpdate.id === id
+              ? { ...todoToUpdate, ...todo }
+              : todoToUpdate,
           ),
         );
         setEditedTodoId(null);
@@ -105,6 +107,10 @@ export const useTodos = () => {
       ),
     ).finally(() => setIsReceivingAnswer(false));
   };
+
+  useEffect(() => {
+    getTodosOnLoad();
+  }, []);
 
   return {
     todos,
